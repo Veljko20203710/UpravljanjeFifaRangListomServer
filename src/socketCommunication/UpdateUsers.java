@@ -1,0 +1,37 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package socketCommunication;
+
+import applicationController.ApplicationController;
+import domain.User;
+import exceptions.DatabaseException;
+import java.util.List;
+import transfer.RequestObject;
+import transfer.ResponseObject;
+import util.ResponseStatus;
+
+/**
+ *
+ * @author Veljko
+ */
+public class UpdateUsers implements Service {
+
+    @Override
+    public ResponseObject execute(RequestObject requestObject) throws Exception {
+        ResponseObject responseObject = new ResponseObject();
+        List<User> users = (List<User>) requestObject.getData();
+        try {
+            ApplicationController.getInstance().updateUsers(users);
+            responseObject.setStatus(ResponseStatus.SUCCESS);
+        } catch (DatabaseException ex) {
+            responseObject.setStatus(ResponseStatus.ERROR);
+            responseObject.setErrorMessage("Server side error.");
+            responseObject.setData(new DatabaseException());
+        }
+        return responseObject;
+    }
+
+}
